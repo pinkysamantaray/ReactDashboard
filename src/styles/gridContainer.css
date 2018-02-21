@@ -1,0 +1,146 @@
+@import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
+@import '../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+
+.panel-heading span{
+    font-weight: 600;
+    font-size: 16px;
+}
+.table {
+    margin-bottom: 0px !important;
+}
+.table td, .table th, .table>tbody>tr>td {
+    border-top: 0px;
+}
+.tableTools {
+    color: #cc0000;
+    margin: 5px 10px;
+    cursor: pointer;
+}
+.panel-default>.panel-heading {
+    background: #ffffff;
+    border-color: #ffffff;
+}
+.react-bs-table .react-bs-container-footer>table>thead>tr>th, .react-bs-table .react-bs-container-header>table>thead>tr>th {
+    color: #868686;
+    font-size: 12px;
+}
+.react-bs-table table td, .react-bs-table table th {
+    padding: 10px 20px !important;
+}
+.table>tbody>tr>td {
+    font-size: 13px;
+}
+.react-bs-table table tr > td:first-child{
+    color: #0f8b8d;
+    text-decoration: underline;
+}
+.react-bs-table table tr > td:nth-child(2), .react-bs-table table tr > td:nth-child(5){
+    font-weight: 600;
+}
+.react-bs-table-container .react-bs-table-search-form > input.form-control{
+    border-color: #cc0000;
+}
+.page-item.active .page-link{
+    background-color: #cc0000;
+    border-color: #cc0000;
+}
+.react-bs-table-container .react-bs-table-search-form > input.form-control:focus{
+    text-decoration: none;
+    box-shadow: none;
+}
+.react-bs-table-pagination {
+    padding: 5px 20px;
+}
+.react-bs-table-tool-bar {
+    position: absolute;
+    float: right;
+    right: 110px;
+    width: 60%;
+    z-index: 100;
+    margin-right: 20px;
+    top: 22%;
+    left: 20%;
+}
+.statusMarker{
+    font-size: 8px;
+    margin: 0px 10px 0px -20px;
+}
+.overlay {
+    height: auto;
+    position: absolute;
+    top: 32%;
+    right: 12%;
+    z-index: 100000;
+    overflow-x: hidden;
+    border-radius: 5px;
+    padding: 1rem;
+    display: block;
+    box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.12);
+    border: solid 1px #cc0000;
+    background: #ffffff;
+}
+
+.overlayHide {
+    width: 0;
+    display: none;
+}
+.overlayShow {
+    width: '20%';
+    display: 'block';
+}
+
+.checkbox-container {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 18px;
+    width: 18px;
+    border: 1px solid #cc0000;
+    border-radius: 2px;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.checkbox-container .checkmark:after {
+    left: 4px;
+    top: -1px;
+    width: 8px;
+    height: 15px;
+    border: solid #cc0000;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.checkbox-inline, .radio-inline{
+    padding-left: 25px;
+}
