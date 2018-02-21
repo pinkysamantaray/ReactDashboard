@@ -58,7 +58,7 @@
     width: 60%;
     z-index: 100;
     margin-right: 20px;
-    top: 22%;
+    top: 6em;
     left: 20%;
 }
 .statusMarker{
@@ -67,8 +67,9 @@
 }
 .overlay {
     height: auto;
+    width: 14%;
     position: absolute;
-    top: 32%;
+    top: 8em;
     right: 12%;
     z-index: 100000;
     overflow-x: hidden;
@@ -132,9 +133,9 @@
 /* Style the checkmark/indicator */
 .checkbox-container .checkmark:after {
     left: 4px;
-    top: -1px;
+    top: 0px;
     width: 8px;
-    height: 15px;
+    height: 12px;
     border: solid #cc0000;
     border-width: 0 3px 3px 0;
     -webkit-transform: rotate(45deg);
@@ -143,4 +144,8 @@
 }
 .checkbox-inline, .radio-inline{
     padding-left: 25px;
+}
+.groupHeader{
+    padding: 0px 0px 5px;
+    text-transform: uppercase;
 }

@@ -1,10 +1,11 @@
 import React from 'react';
 import { Panel, Form, FormGroup, FormControl, Checkbox } from 'react-bootstrap';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-import { classNames } from 'classnames';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import _ from 'lodash';
 
 let order = 'desc';
 
@@ -109,16 +110,16 @@ export class GridContainer extends React.Component {
             parameter: "Performance",
             location: "Location"
         }],
-        /*style : {
-            width: 0,
-            display: 'none'
-        },*/
         isFilterEnabled: false
     };
 
-    this.showFilterTool = this.showFilterTool.bind(this);
-    this.hideFilterTool = this.hideFilterTool.bind(this);
-
+    this.showHideFilterTool = this.showHideFilterTool.bind(this);
+    let {filterData} = []; 
+    filterData = _.uniq(_.map(this.state.data, 'status'));
+    this.filterData = filterData;
+    let {parameterData} = []; 
+    parameterData = _.uniq(_.map(this.state.data, 'parameter'));
+    this.parameterData = parameterData;
   }
 
   sizePerPageListChange(sizePerPage) {
@@ -148,18 +149,15 @@ export class GridContainer extends React.Component {
       return `<i class='fas fa-circle statusMarker ${ styleClassName }' ></i> ${cell}`; 
   }
 
-  showFilterTool(){
-    //const overLayStyle = { width : '20%', display:'block' };
-    //this.setState({ style: overLayStyle });
-
+  showHideFilterTool(){
     this.setState({ isFilterEnabled: !this.state.isFilterEnabled });
-    document.addEventListener("click", this.hideFilterTool);
   }
-  hideFilterTool(){
-    document.removeEventListener("click", this.hideFilterTool);
-    //const overLayStyle = { width : 0, display:'none' };
-    //this.setState({ style: overLayStyle });
+
+  filterData(e){
+    console.log("---filterData");
+    /*this.state.data = _.filter(this.state.data, _.matches({ 'a': 4, 'c': 6 }));;*/
   }
+
  render() {
     const {isSearchEnabled, data, isFilterEnabled} = this.state;
     return (
@@ -171,23 +169,34 @@ export class GridContainer extends React.Component {
     
         <Panel.Body>
             <i className="fas fa-calendar pull-right tableTools"></i>          
-            <i className="fas fa-filter pull-right tableTools" onClick={this.showFilterTool}></i> 
+            <i className="fas fa-filter pull-right tableTools" onClick={this.showHideFilterTool}></i> 
             <i className="fab fa-sistrix pull-right tableTools" 
                 onClick={(e) => this.options.showSearchTool(e)}></i>
                 <div ref = "filternav" className={classNames('overlay',{
                                         'overlayHide': isFilterEnabled,
                                         'overlayShow': !isFilterEnabled
-                                        })>
+                                        })} >
                     <div>
-                        <div>
-                            
-                        </div>
-                        <FormGroup>
-                            <label className="checkbox-container">
-                            <Checkbox inline>One<span className="checkmark"></span></Checkbox>
-                            
-                            </label>                         
-                        </FormGroup>
+                        <div className="groupHeader"> Status </div>
+                        {this.filterData && this.filterData.map((entry, i) =>
+                            <FormGroup key={i}>
+                                <label className="checkbox-container">
+                                <Checkbox inline onChange={this.filterData}>{entry}<span className="checkmark"></span></Checkbox>
+                                
+                                </label>                         
+                            </FormGroup>
+                        )}
+                    </div>
+                    <div>
+                        <div className="groupHeader"> Parameter </div>
+                        {this.parameterData && this.parameterData.map((entry, i) =>
+                            <FormGroup key={i}>
+                                <label className="checkbox-container">
+                                <Checkbox inline onChange={this.filterData}>{entry}<span className="checkmark"></span></Checkbox>
+                                
+                                </label>                         
+                            </FormGroup>
+                        )}
                     </div>
                 </div>
         </Panel.Body>
