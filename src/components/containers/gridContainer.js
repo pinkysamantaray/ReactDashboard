@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
-
-let order = 'desc';
+import DateRangePicker from 'react-daterange-picker';
+import moment from 'moment-range';
 
 export class GridContainer extends React.Component {
 
@@ -21,6 +21,8 @@ export class GridContainer extends React.Component {
     };
     this.state = {
         isSearchEnabled: false,
+        isFilterEnabled: true,
+        isCalendarEnabled: true,
         data : [{
             id: "HIT98",
             status: "Critical",
@@ -109,14 +111,17 @@ export class GridContainer extends React.Component {
             description: "Down-time Loss",
             parameter: "Performance",
             location: "Location"
-        }],
-        isFilterEnabled: false
+        }]
     };
 
     this.showHideFilterTool = this.showHideFilterTool.bind(this);
+    this.showHideCalendarTool = this.showHideCalendarTool.bind(this);
+    this.filterData = this.filterData.bind(this);
+    
     let {filterData} = []; 
     filterData = _.uniq(_.map(this.state.data, 'status'));
     this.filterData = filterData;
+
     let {parameterData} = []; 
     parameterData = _.uniq(_.map(this.state.data, 'parameter'));
     this.parameterData = parameterData;
@@ -153,52 +158,70 @@ export class GridContainer extends React.Component {
     this.setState({ isFilterEnabled: !this.state.isFilterEnabled });
   }
 
-  filterData(e){
+  showHideCalendarTool(){
+    this.setState({ isCalendarEnabled: !this.state.isCalendarEnabled });
+  }
+
+  filterData = (e) => {
     console.log("---filterData");
     /*this.state.data = _.filter(this.state.data, _.matches({ 'a': 4, 'c': 6 }));;*/
   }
 
+  handleSelect() {
+
+  }
+
  render() {
-    const {isSearchEnabled, data, isFilterEnabled} = this.state;
-    return (
-      <Panel>
+    const { data, isSearchEnabled, isFilterEnabled, isCalendarEnabled} = this.state;
+    return ( 
+      <Panel id="gridPanel">
         <Panel.Heading>
             <i className="fas fa-exclamation-triangle tableTools"></i> 
             <span>Alerts</span>
         </Panel.Heading>
     
         <Panel.Body>
-            <i className="fas fa-calendar pull-right tableTools"></i>          
+            <i className="fas fa-calendar pull-right tableTools" onClick={this.showHideCalendarTool}></i>       
             <i className="fas fa-filter pull-right tableTools" onClick={this.showHideFilterTool}></i> 
             <i className="fab fa-sistrix pull-right tableTools" 
                 onClick={(e) => this.options.showSearchTool(e)}></i>
-                <div ref = "filternav" className={classNames('overlay',{
-                                        'overlayHide': isFilterEnabled,
-                                        'overlayShow': !isFilterEnabled
-                                        })} >
-                    <div>
-                        <div className="groupHeader"> Status </div>
-                        {this.filterData && this.filterData.map((entry, i) =>
-                            <FormGroup key={i}>
-                                <label className="checkbox-container">
-                                <Checkbox inline onChange={this.filterData}>{entry}<span className="checkmark"></span></Checkbox>
-                                
-                                </label>                         
-                            </FormGroup>
-                        )}
-                    </div>
-                    <div>
-                        <div className="groupHeader"> Parameter </div>
-                        {this.parameterData && this.parameterData.map((entry, i) =>
-                            <FormGroup key={i}>
-                                <label className="checkbox-container">
-                                <Checkbox inline onChange={this.filterData}>{entry}<span className="checkmark"></span></Checkbox>
-                                
-                                </label>                         
-                            </FormGroup>
-                        )}
-                    </div>
+            <div ref = "filternav" className={classNames('filterOverlay',{
+                                    'filterOverlayHide': isFilterEnabled,
+                                    'filterOverlayShow': !isFilterEnabled
+                                    })} >
+                <div>
+                    <div className="groupHeader"> Status </div>
+                    {this.filterData && this.filterData.map((entry, i) =>
+                        <FormGroup key={i}>
+                            <label className="checkbox-container">
+                            <Checkbox inline onChange={(e) => this.filterData}>{entry}<span className="checkmark"></span></Checkbox>
+                            
+                            </label>                         
+                        </FormGroup>
+                    )}
                 </div>
+                <div>
+                    <div className="groupHeader"> Parameter </div>
+                    {this.parameterData && this.parameterData.map((entry, i) =>
+                        <FormGroup key={i}>
+                            <label className="checkbox-container">
+                            <Checkbox inline onChange={(e) => this.filterData}>{entry}<span className="checkmark"></span></Checkbox>
+                            
+                            </label>                         
+                        </FormGroup>
+                    )}
+                </div>
+            </div>
+            <DateRangePicker  className={classNames('calendarOverlay',{
+                                    'calendarOverlayHide': isCalendarEnabled,
+                                    'calendarOverlayShow': !isCalendarEnabled
+                                    })}
+                firstOfWeek={1}
+                numberOfCalendars={1}
+                minimumDate={new Date()}
+                value={this.state.value}
+                onSelect={this.handleSelect}
+                />
         </Panel.Body>
         <BootstrapTable ref='table' data={data} striped hover bordered={ false } search={isSearchEnabled} pagination options={ this.options }>
             <TableHeaderColumn isKey dataSort dataField='id'>ID</TableHeaderColumn>

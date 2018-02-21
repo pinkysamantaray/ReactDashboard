@@ -1,5 +1,6 @@
-@import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
+@import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 @import '../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+@import '../../node_modules/react-daterange-picker/dist/css/react-calendar.css';
 
 .panel-heading span{
     font-weight: 600;
@@ -65,7 +66,7 @@
     font-size: 8px;
     margin: 0px 10px 0px -20px;
 }
-.overlay {
+.filterOverlay {
     height: auto;
     width: 14%;
     position: absolute;
@@ -80,13 +81,31 @@
     border: solid 1px #cc0000;
     background: #ffffff;
 }
+.calendarOverlay {
+    height: auto;
+    position: absolute;
+    top: 8em;
+    right: 12%;
+    z-index: 100000;
+    overflow-x: hidden;
+    border-radius: 5px;
+    padding: 1rem;
+    display: block;
+    box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.12);
+    border: solid 1px #cc0000;
+    background: #ffffff;
+}
 
-.overlayHide {
+.filterOverlayHide, .calendarOverlayHide {
     width: 0;
     display: none;
 }
-.overlayShow {
+.filterOverlayShow {
     width: '20%';
+    display: 'block';
+}
+.calendarOverlayShow {
+    width: '30%';
     display: 'block';
 }
 
@@ -148,4 +167,18 @@
 .groupHeader{
     padding: 0px 0px 5px;
     text-transform: uppercase;
+}
+
+.DateRangePicker__Month {
+    margin: 0px !important;
+}
+.DateRangePicker__PaginationArrowIcon--previous {
+    border-right: 8px solid #cc0000;
+}
+.DateRangePicker__PaginationArrowIcon--next {
+    border-left: 8px solid #cc0000;
+}
+.DateRangePicker__MonthHeader{
+    height: auto !important;
+    line-height: normal !important;
 }
