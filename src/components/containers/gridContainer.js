@@ -142,17 +142,19 @@ export class GridContainer extends React.Component {
         //     dataField: 'dateTime',
         //     order: 'desc'
         // }],
-        dateValue: null
+        dateValue: null,
+        filterItem : []
     };
+
+    this.state.filteredData = this.state.data;
 
     this.showHideFilterTool = this.showHideFilterTool.bind(this);
     this.showHideCalendarTool = this.showHideCalendarTool.bind(this);
-    this.filterData = this.filterData.bind(this);
+    this.handleFilterData = this.handleFilterData.bind(this);
     this.handleDateSelect = this.handleDateSelect.bind(this);
     
     let {filterData} = []; 
     filterData = _.uniq(_.map(this.state.data, 'status'));
-    //this.filterData = filterData;
     this.filterData =  _.map(filterData, function(value, key){
         return {
             value: value,
@@ -162,7 +164,6 @@ export class GridContainer extends React.Component {
 
     let {parameterData} = []; 
     parameterData = _.uniq(_.map(this.state.data, 'parameter'));
-    //this.parameterData = parameterData;
     this.parameterData =  _.map(parameterData, function(value, key){
         return {
             value: value,
@@ -180,7 +181,6 @@ export class GridContainer extends React.Component {
   }
   
   showSearchTool(el) { 
-    console.log(this);
     const {isSearchEnabled} = this.state;
     this.setState({
         isSearchEnabled: !isSearchEnabled
@@ -207,9 +207,25 @@ export class GridContainer extends React.Component {
     this.setState({ isCalendarEnabled: !this.state.isCalendarEnabled });
   }
 
-  filterData = (e) => {
-    console.log("---filterData");
-    /*this.state.data = _.filter(this.state.data, _.matches({  }));*/
+  handleFilterData(type, el) {
+    let {newFilterItem} = []; 
+    let item = _.findIndex(this.state.filterItem, {value :el.target.value});
+    if(el.target.checked){
+        if(item == -1){
+            this.state.filterItem.push({
+                type: type,
+                value:el.target.value
+            });
+        }
+    } else {
+        _.remove(this.state.filterItem, {value :el.target.value});
+    } 
+    //this.refs.table.handleSearch(el.target.value); //react-bootstrap-table inbuilt search handler
+    this.setState({
+        filteredData : this.state.data.filter(function (item) {
+            return item[type] == el.target.value;
+        })
+    });
   }
 
   handleDateSelect(range, states) {
@@ -221,7 +237,7 @@ export class GridContainer extends React.Component {
   }
 
  render() {
-    const { data, isSearchEnabled, isFilterEnabled, isCalendarEnabled, dateValue} = this.state; //columns, defaultSorted,
+    const { data, isSearchEnabled, isFilterEnabled, isCalendarEnabled, dateValue, filterItem, filteredData} = this.state; //columns, defaultSorted,
     return ( 
       <Panel id="gridPanel">
         <Panel.Heading>
@@ -241,25 +257,21 @@ export class GridContainer extends React.Component {
                 <div>
                     <div className="groupHeader"> Status </div>
                     {this.filterData && this.filterData.map((entry, i) =>
-                        <FormGroup key={i}>
-                            <label className="checkbox-container">
-                                <Checkbox inline onChange={(e) => this.filterData} >{entry.value}
-                                    <span className="checkmark"></span>
-                                </Checkbox>
-                            </label>                         
-                        </FormGroup>
+                        <div key={i}>                            
+                            <input type="checkbox" id={entry.value} className="styled-checkbox" 
+                            onChange={(e) => this.handleFilterData('status',e)} value={entry.value}/>
+                            <label htmlFor={entry.value}>{entry.value}</label>
+                        </div>
                     )}
                 </div>
                 <div>
                     <div className="groupHeader"> Parameter </div>
                     {this.parameterData && this.parameterData.map((entry, i) =>
-                        <FormGroup key={i}>
-                            <label className="checkbox-container">
-                            <Checkbox inline onChange={(e) => this.filterData} checked>{entry.value}
-                                <span className="checkmark"></span>
-                            </Checkbox>
-                            </label>                         
-                        </FormGroup>
+                        <div key={i}>
+                            <input type="checkbox" id={entry.value} className="styled-checkbox" 
+                            onChange={(e) => this.handleFilterData('parameter',e)} value={entry.value}/>
+                            <label htmlFor={entry.value}>{entry.value}</label>
+                        </div>
                     )}
                 </div>
             </div>
@@ -277,7 +289,7 @@ export class GridContainer extends React.Component {
                 selectionType='range'
                 />
         </Panel.Body>
-        <BootstrapTable ref='table' data={data} striped hover bordered={ false } search={isSearchEnabled} multiColumnSearch pagination options={ this.options }>
+        <BootstrapTable ref='table' data={filteredData} striped hover bordered={ false } search={isSearchEnabled} multiColumnSearch pagination options={ this.options }>
             <TableHeaderColumn isKey dataSort dataField='id'>ID</TableHeaderColumn>
             <TableHeaderColumn dataSort dataField='status' dataFormat={ this.setStatusStyle }>Status</TableHeaderColumn>
             <TableHeaderColumn dataField='dateTime'>Date &amp; Time</TableHeaderColumn>
