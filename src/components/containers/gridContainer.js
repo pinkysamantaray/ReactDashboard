@@ -152,24 +152,23 @@ export class GridContainer extends React.Component {
     
     let {filterData} = []; 
     filterData = _.uniq(_.map(this.state.data, 'status'));
-    this.filterData = filterData;
-    // this.filterData =  _.map(filterData, function(value, key){
-    //     return [{
-    //         value: value,
-    //         checked: false
-    //     }];
-    // });
+    //this.filterData = filterData;
+    this.filterData =  _.map(filterData, function(value, key){
+        return {
+            value: value,
+            checked: false
+        };
+    });
 
     let {parameterData} = []; 
     parameterData = _.uniq(_.map(this.state.data, 'parameter'));
-    this.parameterData = parameterData;
-    // this.parameterData =  _.map(parameterData, function(value, key){
-    //     return [{
-    //         value: value,
-    //         checked: false
-    //     }];
-    // });
-    // debugger;
+    //this.parameterData = parameterData;
+    this.parameterData =  _.map(parameterData, function(value, key){
+        return {
+            value: value,
+            checked: false
+        };
+    });
   }
 
   sizePerPageListChange(sizePerPage) {
@@ -181,6 +180,7 @@ export class GridContainer extends React.Component {
   }
   
   showSearchTool(el) { 
+    console.log(this);
     const {isSearchEnabled} = this.state;
     this.setState({
         isSearchEnabled: !isSearchEnabled
@@ -213,7 +213,6 @@ export class GridContainer extends React.Component {
   }
 
   handleDateSelect(range, states) {
-    debugger;
     let startDate = moment().toDate(range.start);
     let endDate = moment().toDate(range.end);
     this.setState({
@@ -244,8 +243,9 @@ export class GridContainer extends React.Component {
                     {this.filterData && this.filterData.map((entry, i) =>
                         <FormGroup key={i}>
                             <label className="checkbox-container">
-                            <Checkbox inline onChange={(e) => this.filterData}>{entry}<span className="checkmark"></span></Checkbox>
-                            
+                                <Checkbox inline onChange={(e) => this.filterData} >{entry.value}
+                                    <span className="checkmark"></span>
+                                </Checkbox>
                             </label>                         
                         </FormGroup>
                     )}
@@ -255,8 +255,9 @@ export class GridContainer extends React.Component {
                     {this.parameterData && this.parameterData.map((entry, i) =>
                         <FormGroup key={i}>
                             <label className="checkbox-container">
-                            <Checkbox inline onChange={(e) => this.filterData}>{entry}<span className="checkmark"></span></Checkbox>
-                            
+                            <Checkbox inline onChange={(e) => this.filterData} checked>{entry.value}
+                                <span className="checkmark"></span>
+                            </Checkbox>
                             </label>                         
                         </FormGroup>
                     )}
