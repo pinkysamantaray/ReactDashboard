@@ -1,13 +1,15 @@
 import React from 'react';
 import { Panel, Form, FormGroup, FormControl, Checkbox } from 'react-bootstrap';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+// import BootstrapTable from 'react-bootstrap-table-next';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import _ from 'lodash';
 import DateRangePicker from 'react-daterange-picker';
-import moment from 'moment-range';
+import moment from 'moment';
+import {} from 'moment-range';
 
 export class GridContainer extends React.Component {
 
@@ -26,7 +28,7 @@ export class GridContainer extends React.Component {
         data : [{
             id: "HIT98",
             status: "Critical",
-            dateTime: "12/01/2018 14:25",
+            dateTime: new Date("12/01/2018 14:25"),
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
@@ -34,7 +36,7 @@ export class GridContainer extends React.Component {
         }, {
             id: "HIT92",
             status: "Critical",
-            dateTime: "12/01/2018 14:25",
+            dateTime: new Date("08/01/2018 14:25"),
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
@@ -42,7 +44,7 @@ export class GridContainer extends React.Component {
         }, {
             id: "HIT86",
             status: "Warning",
-            dateTime: "12/01/2018 14:25",
+            dateTime: new Date("12/10/2018 14:25"),
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
@@ -50,7 +52,7 @@ export class GridContainer extends React.Component {
         }, {
             id: "HIT88",
             status: "Non-Critical",
-            dateTime: "12/01/2018 14:25",
+            dateTime: new Date("02/11/2018 14:25"),
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
@@ -58,7 +60,7 @@ export class GridContainer extends React.Component {
         }, {
             id: "HIT94",
             status: "Critical",
-            dateTime: "12/01/2018 14:25",
+            dateTime: new Date("04/21/2018 14:25"),
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
@@ -66,65 +68,108 @@ export class GridContainer extends React.Component {
         }, {
             id: "HIT91",
             status: "Critical",
-            dateTime: "12/01/2018 14:25",
+            dateTime: new Date("08/01/2018 14:25"),
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
             location: "Location"
         }, {
-            id: "HIT92",
+            id: "HIT45",
             status: "Critical",
-            dateTime: "12/01/2018 14:25",
+            dateTime: new Date("02/14/2018 14:25"),
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
             location: "Location"
         }, {
-            id: "HIT86",
+            id: "HIT32",
             status: "Warning",
-            dateTime: "12/01/2018 14:25",
+            dateTime: new Date("06/21/2018 14:25"),
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
             location: "Location"
         }, {
-            id: "HIT88",
+            id: "HIT18",
             status: "Non-Critical",
-            dateTime: "12/01/2018 14:25",
+            dateTime: new Date("08/11/2018 14:25"),
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
             location: "Location"
         }, {
-            id: "HIT94",
+            id: "HIT44",
             status: "Critical",
-            dateTime: "12/01/2018 14:25",
+            dateTime: new Date("04/02/2018 14:25"),
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
             location: "Location"
         }, {
-            id: "HIT91",
+            id: "HIT61",
             status: "Critical",
-            dateTime: "12/01/2018 14:25",
+            dateTime: new Date("02/13/2018 14:25"),
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
             location: "Location"
-        }]
+        }],
+        // columns : [{
+        //     dataField: 'id',
+        //     text: 'ID',
+        //     sort: true,
+        // },{
+        //     dataField: 'status',
+        //     text: 'Status',
+        //     sort: true,
+        // },{
+        //     dataField: 'dateTime',
+        //     text: 'Date &amp; Time'
+        // },{
+        //     dataField: 'activeTime',
+        //     text: 'Active Time'
+        // },{
+        //     dataField: 'description',
+        //     text: 'Description'
+        // },{
+        //     dataField: 'parameter',
+        //     text: 'Parameter'
+        // },{
+        //     dataField: 'location',
+        //     text: 'Location'
+        // }],
+        // defaultSorted : [{
+        //     dataField: 'dateTime',
+        //     order: 'desc'
+        // }],
+        dateValue: null
     };
 
     this.showHideFilterTool = this.showHideFilterTool.bind(this);
     this.showHideCalendarTool = this.showHideCalendarTool.bind(this);
     this.filterData = this.filterData.bind(this);
+    this.handleDateSelect = this.handleDateSelect.bind(this);
     
     let {filterData} = []; 
     filterData = _.uniq(_.map(this.state.data, 'status'));
     this.filterData = filterData;
+    // this.filterData =  _.map(filterData, function(value, key){
+    //     return [{
+    //         value: value,
+    //         checked: false
+    //     }];
+    // });
 
     let {parameterData} = []; 
     parameterData = _.uniq(_.map(this.state.data, 'parameter'));
     this.parameterData = parameterData;
+    // this.parameterData =  _.map(parameterData, function(value, key){
+    //     return [{
+    //         value: value,
+    //         checked: false
+    //     }];
+    // });
+    // debugger;
   }
 
   sizePerPageListChange(sizePerPage) {
@@ -164,15 +209,20 @@ export class GridContainer extends React.Component {
 
   filterData = (e) => {
     console.log("---filterData");
-    /*this.state.data = _.filter(this.state.data, _.matches({ 'a': 4, 'c': 6 }));;*/
+    /*this.state.data = _.filter(this.state.data, _.matches({  }));*/
   }
 
-  handleSelect() {
-
+  handleDateSelect(range, states) {
+    debugger;
+    let startDate = moment().toDate(range.start);
+    let endDate = moment().toDate(range.end);
+    this.setState({
+        dateValue: range
+    });
   }
 
  render() {
-    const { data, isSearchEnabled, isFilterEnabled, isCalendarEnabled} = this.state;
+    const { data, isSearchEnabled, isFilterEnabled, isCalendarEnabled, dateValue} = this.state; //columns, defaultSorted,
     return ( 
       <Panel id="gridPanel">
         <Panel.Heading>
@@ -219,11 +269,14 @@ export class GridContainer extends React.Component {
                 firstOfWeek={1}
                 numberOfCalendars={1}
                 minimumDate={new Date()}
-                value={this.state.value}
-                onSelect={this.handleSelect}
+                value={this.state.dateValue}
+                onSelect={this.handleDateSelect}
+                minimumDate={new Date("01-01-2010")}
+                maximumDate={moment().add(2, 'years').toDate()}
+                selectionType='range'
                 />
         </Panel.Body>
-        <BootstrapTable ref='table' data={data} striped hover bordered={ false } search={isSearchEnabled} pagination options={ this.options }>
+        <BootstrapTable ref='table' data={data} striped hover bordered={ false } search={isSearchEnabled} multiColumnSearch pagination options={ this.options }>
             <TableHeaderColumn isKey dataSort dataField='id'>ID</TableHeaderColumn>
             <TableHeaderColumn dataSort dataField='status' dataFormat={ this.setStatusStyle }>Status</TableHeaderColumn>
             <TableHeaderColumn dataField='dateTime'>Date &amp; Time</TableHeaderColumn>
@@ -232,6 +285,7 @@ export class GridContainer extends React.Component {
             <TableHeaderColumn dataField='parameter'>Parameter</TableHeaderColumn>
             <TableHeaderColumn dataField='location'>Location</TableHeaderColumn>
         </BootstrapTable>
+        {/* <BootstrapTable keyField='id' data={ data } columns={ columns } striped  hover  condensedbordered={ false } noDataIndication="No Data Found" defaultSorted={ defaultSorted } /> */}
       </Panel>
     );
   }

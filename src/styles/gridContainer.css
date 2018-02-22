@@ -1,5 +1,6 @@
 @import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 @import '../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+/* @import '../../node_modules/react-bootstrap-table-next/dist/react-bootstrap-table2.min.css'; */
 @import '../../node_modules/react-daterange-picker/dist/css/react-calendar.css';
 
 .panel-heading span{
@@ -181,4 +182,8 @@
 .DateRangePicker__MonthHeader{
     height: auto !important;
     line-height: normal !important;
+}
+.DateRangePicker__CalendarSelection{
+    background-color: #cc0000;
+    border-color:#cc0000;
 }
