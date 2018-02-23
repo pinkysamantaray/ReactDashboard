@@ -28,7 +28,7 @@ export class GridContainer extends React.Component {
         data : [{
             id: "HIT98",
             status: "Critical",
-            dateTime: new Date("12/01/2018 14:25"),
+            dateTime: "02/12/2018",
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
@@ -36,7 +36,7 @@ export class GridContainer extends React.Component {
         }, {
             id: "HIT92",
             status: "Critical",
-            dateTime: new Date("08/01/2018 14:25"),
+            dateTime: "02/01/2018",
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
@@ -44,7 +44,7 @@ export class GridContainer extends React.Component {
         }, {
             id: "HIT86",
             status: "Warning",
-            dateTime: new Date("12/10/2018 14:25"),
+            dateTime: "02/10/2018",
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
@@ -52,7 +52,7 @@ export class GridContainer extends React.Component {
         }, {
             id: "HIT88",
             status: "Non-Critical",
-            dateTime: new Date("02/11/2018 14:25"),
+            dateTime: "02/11/2018",
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
@@ -60,7 +60,7 @@ export class GridContainer extends React.Component {
         }, {
             id: "HIT94",
             status: "Critical",
-            dateTime: new Date("04/21/2018 14:25"),
+            dateTime: "02/21/2018",
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
@@ -68,7 +68,7 @@ export class GridContainer extends React.Component {
         }, {
             id: "HIT91",
             status: "Critical",
-            dateTime: new Date("08/01/2018 14:25"),
+            dateTime: "02/01/2018",
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
@@ -76,7 +76,7 @@ export class GridContainer extends React.Component {
         }, {
             id: "HIT45",
             status: "Critical",
-            dateTime: new Date("02/14/2018 14:25"),
+            dateTime: "02/14/2018",
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
@@ -84,7 +84,7 @@ export class GridContainer extends React.Component {
         }, {
             id: "HIT32",
             status: "Warning",
-            dateTime: new Date("06/21/2018 14:25"),
+            dateTime: "02/21/2018",
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
@@ -92,7 +92,7 @@ export class GridContainer extends React.Component {
         }, {
             id: "HIT18",
             status: "Non-Critical",
-            dateTime: new Date("08/11/2018 14:25"),
+            dateTime: "02/27/2018",
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
@@ -100,7 +100,7 @@ export class GridContainer extends React.Component {
         }, {
             id: "HIT44",
             status: "Critical",
-            dateTime: new Date("04/02/2018 14:25"),
+            dateTime: "02/02/2018",
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
@@ -108,7 +108,7 @@ export class GridContainer extends React.Component {
         }, {
             id: "HIT61",
             status: "Critical",
-            dateTime: new Date("02/13/2018 14:25"),
+            dateTime: "02/13/2018",
             activeTime: "14 Hrs.",
             description: "Down-time Loss",
             parameter: "Performance",
@@ -207,32 +207,66 @@ export class GridContainer extends React.Component {
     this.setState({ isCalendarEnabled: !this.state.isCalendarEnabled });
   }
 
-  handleFilterData(type, el) {
-    let {newFilterItem} = []; 
-    let item = _.findIndex(this.state.filterItem, {value :el.target.value});
+  handleFilterData(checkedType, el) {
+    let filterItems = this.state.filterItem;
+    let newFilteredData = [];
+
+
+    let index = _.findIndex(filterItems, {value :el.target.value});
+
     if(el.target.checked){
-        if(item == -1){
-            this.state.filterItem.push({
-                type: type,
+        if(index == -1){
+          filterItems.push({
+                type: checkedType,
                 value:el.target.value
             });
+
+            //  filterItems.push(el.target.value);
+            console.log('push----', filterItems);
         }
-    } else {
-        _.remove(this.state.filterItem, {value :el.target.value});
     } 
-    //this.refs.table.handleSearch(el.target.value); //react-bootstrap-table inbuilt search handler
+    else {
+        // _.remove(filterItems, {value :el.target.value});
+        // console.log('remove----', filterItems);
+        filterItems.splice(index, 1)
+        console.log('remove----', filterItems);
+    }
+
+    if(filterItems.length > 0 ) {
+      newFilteredData  = this.state.data.filter( (entry) => {
+        const result = []; 
+        for (let i = 0; i < filterItems.length; i+=1) {
+          if(filterItems[i].value == entry[filterItems[i].type]){
+            result.push(filterItems[i]);
+          }
+        }
+        
+        return  result.length > 0 ? true :  false; 
+      })
+    } else {
+      newFilteredData = this.state.data;
+    }
+
     this.setState({
-        filteredData : this.state.data.filter(function (item) {
-            return item[type] == el.target.value;
-        })
+      filterItem: filterItems,
+      filteredData : newFilteredData
     });
   }
 
-  handleDateSelect(range, states) {
-    let startDate = moment().toDate(range.start);
-    let endDate = moment().toDate(range.end);
+  handleDateSelect(range) {
+    const startDate = new Date(range.start._i).getTime();
+    const endDate = new Date(range.end._i).getTime();
+
+    let newFilteredData = [];
+
+    newFilteredData  = this.state.data.filter((entry) => {
+      const entryDate = new Date(entry.dateTime).getTime();
+      return entryDate >= startDate && entryDate <= endDate;
+    })
+     
     this.setState({
-        dateValue: range
+      filteredData : newFilteredData,
+      dateValue: range
     });
   }
 
