@@ -1,7 +1,6 @@
 import React from 'react';
 import { Panel, Form, FormGroup, FormControl, Checkbox } from 'react-bootstrap';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-// import BootstrapTable from 'react-bootstrap-table-next';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
@@ -114,34 +113,6 @@ export class GridContainer extends React.Component {
             parameter: "Performance",
             location: "Location"
         }],
-        // columns : [{
-        //     dataField: 'id',
-        //     text: 'ID',
-        //     sort: true,
-        // },{
-        //     dataField: 'status',
-        //     text: 'Status',
-        //     sort: true,
-        // },{
-        //     dataField: 'dateTime',
-        //     text: 'Date &amp; Time'
-        // },{
-        //     dataField: 'activeTime',
-        //     text: 'Active Time'
-        // },{
-        //     dataField: 'description',
-        //     text: 'Description'
-        // },{
-        //     dataField: 'parameter',
-        //     text: 'Parameter'
-        // },{
-        //     dataField: 'location',
-        //     text: 'Location'
-        // }],
-        // defaultSorted : [{
-        //     dataField: 'dateTime',
-        //     order: 'desc'
-        // }],
         dateValue: null,
         filterItem : []
     };
@@ -173,11 +144,11 @@ export class GridContainer extends React.Component {
   }
 
   sizePerPageListChange(sizePerPage) {
-    alert(`sizePerPage: ${sizePerPage}`);
+    //alert(`sizePerPage: ${sizePerPage}`);
   }
 
   onPageChange(page, sizePerPage) {
-    alert(`page: ${page}, sizePerPage: ${sizePerPage}`);
+    //alert(`page: ${page}, sizePerPage: ${sizePerPage}`);
   }
   
   showSearchTool(el) { 
@@ -211,46 +182,37 @@ export class GridContainer extends React.Component {
     let filterItems = this.state.filterItem;
     let newFilteredData = [];
 
-
     let index = _.findIndex(filterItems, {value :el.target.value});
 
     if(el.target.checked){
         if(index == -1){
-          filterItems.push({
+            filterItems.push({
                 type: checkedType,
                 value:el.target.value
             });
-
-            //  filterItems.push(el.target.value);
             console.log('push----', filterItems);
         }
     } 
     else {
-        // _.remove(filterItems, {value :el.target.value});
-        // console.log('remove----', filterItems);
-        filterItems.splice(index, 1)
+        filterItems.splice(index, 1);
         console.log('remove----', filterItems);
     }
 
-    if(filterItems.length > 0 ) {
-      newFilteredData  = this.state.data.filter( (entry) => {
-        const result = []; 
-        for (let i = 0; i < filterItems.length; i+=1) {
-          if(filterItems[i].value == entry[filterItems[i].type]){
-            result.push(filterItems[i]);
-          }
-        }
-        
-        return  result.length > 0 ? true :  false; 
-      })
-    } else {
-      newFilteredData = this.state.data;
+    this.updateFilteredData();
+    console.log('Filter Item-----', this.state.filterItem);
+    if(this.state.dateValue) {
+        this.handleDateSelect(this.state.dateValue);
     }
+  }
 
-    this.setState({
-      filterItem: filterItems,
-      filteredData : newFilteredData
-    });
+  removeFilterItem(item, e){
+    let filterItems = this.state.filterItem;
+    let index = _.findIndex(filterItems, {value :item.value});
+    let itemInFilterData = _.findIndex(this.filterData, {value: item.value});
+    this.filterData[itemInFilterData].checked = false;
+    document.getElementById(item.value).checked =false;
+    filterItems.splice(index, 1);
+    this.updateFilteredData();
   }
 
   handleDateSelect(range) {
@@ -259,69 +221,121 @@ export class GridContainer extends React.Component {
 
     let newFilteredData = [];
 
-    newFilteredData  = this.state.data.filter((entry) => {
-      const entryDate = new Date(entry.dateTime).getTime();
-      return entryDate >= startDate && entryDate <= endDate;
+    if(this.state.filterItem.length > 0 ) {
+        newFilteredData  = this.state.data.filter( (entry) => {
+          const result = []; 
+          for (let i = 0; i < this.state.filterItem.length; i+=1) {
+            if(this.state.filterItem[i].value == entry[this.state.filterItem[i].type]){
+              result.push(this.state.filterItem[i]);
+            }
+          }        
+          return  result.length > 0 ? true :  false; 
+        })
+    } else {
+        newFilteredData = this.state.data;
+    }
+
+    newFilteredData  = newFilteredData.filter((entry) => {
+        const entryDate = new Date(entry.dateTime).getTime();
+        return entryDate >= startDate && entryDate <= endDate;
     })
      
     this.setState({
-      filteredData : newFilteredData,
-      dateValue: range
+        filteredData : newFilteredData,
+        dateValue: range
+    });
+  }
+
+  updateFilteredData(){
+    let filterItems = this.state.filterItem;
+    let newFilteredData = [],  gridData = [];
+
+    if(filterItems.length > 0 ) {
+        if(this.state.dateValue){
+            gridData = this.state.filteredData;
+        } else {
+            gridData = this.state.data;
+        }
+        newFilteredData  = gridData.filter( (entry) => {
+          const result = []; 
+          for (let i = 0; i < filterItems.length; i+=1) {
+            if(filterItems[i].value == entry[filterItems[i].type]){
+              result.push(filterItems[i]);
+            }
+          }        
+          return  result.length > 0 ? true :  false; 
+        })
+    } else {
+        newFilteredData = this.state.data;
+    }
+  
+    this.setState({
+        filterItem: filterItems,
+        filteredData : newFilteredData
     });
   }
 
  render() {
     const { data, isSearchEnabled, isFilterEnabled, isCalendarEnabled, dateValue, filterItem, filteredData} = this.state; //columns, defaultSorted,
     return ( 
-      <Panel id="gridPanel">
+    <Panel id="gridPanel">
         <Panel.Heading>
             <i className="fas fa-exclamation-triangle tableTools"></i> 
             <span>Alerts</span>
         </Panel.Heading>
     
         <Panel.Body>
-            <i className="fas fa-calendar pull-right tableTools" onClick={this.showHideCalendarTool}></i>       
-            <i className="fas fa-filter pull-right tableTools" onClick={this.showHideFilterTool}></i> 
-            <i className="fab fa-sistrix pull-right tableTools" 
-                onClick={(e) => this.options.showSearchTool(e)}></i>
-            <div ref = "filternav" className={classNames('filterOverlay',{
-                                    'filterOverlayHide': isFilterEnabled,
-                                    'filterOverlayShow': !isFilterEnabled
-                                    })} >
-                <div>
-                    <div className="groupHeader"> Status </div>
-                    {this.filterData && this.filterData.map((entry, i) =>
-                        <div key={i}>                            
-                            <input type="checkbox" id={entry.value} className="styled-checkbox" 
-                            onChange={(e) => this.handleFilterData('status',e)} value={entry.value}/>
-                            <label htmlFor={entry.value}>{entry.value}</label>
-                        </div>
-                    )}
-                </div>
-                <div>
-                    <div className="groupHeader"> Parameter </div>
-                    {this.parameterData && this.parameterData.map((entry, i) =>
-                        <div key={i}>
-                            <input type="checkbox" id={entry.value} className="styled-checkbox" 
-                            onChange={(e) => this.handleFilterData('parameter',e)} value={entry.value}/>
-                            <label htmlFor={entry.value}>{entry.value}</label>
-                        </div>
-                    )}
-                </div>
+            <div className="pull-left">
+                {this.state.filterItem && this.state.filterItem.map((item, i) =>
+                    <span key={i} className="filterItemTag">{item.value}
+                        <i className="fas fa-times filterItemTagClose" onClick={(e) => this.removeFilterItem(item, e)}></i> 
+                    </span>
+                )}
             </div>
-            <DateRangePicker  className={classNames('calendarOverlay',{
+            <div>
+                <i className="fas fa-calendar pull-right tableTools" onClick={this.showHideCalendarTool}></i>       
+                <i className="fas fa-filter pull-right tableTools" onClick={this.showHideFilterTool}></i> 
+                <i className="fab fa-sistrix pull-right tableTools" 
+                    onClick={(e) => this.options.showSearchTool(e)}></i>
+                <div ref = "filternav" className={classNames('filterOverlay',{
+                                        'filterOverlayHide': isFilterEnabled,
+                                        'filterOverlayShow': !isFilterEnabled
+                                        })} >
+                    <div>
+                        <div className="groupHeader"> Status </div>
+                        {this.filterData && this.filterData.map((entry, i) =>
+                            <div key={i}>                            
+                                <input type="checkbox" id={entry.value} className="styled-checkbox" 
+                                onChange={(e) => this.handleFilterData('status',e)} value={entry.value}/>
+                                <label htmlFor={entry.value}>{entry.value}</label>
+                            </div>
+                        )}
+                    </div>
+                    <div>
+                        <div className="groupHeader"> Parameter </div>
+                        {this.parameterData && this.parameterData.map((entry, i) =>
+                            <div key={i}>
+                                <input type="checkbox" id={entry.value} className="styled-checkbox" 
+                                onChange={(e) => this.handleFilterData('parameter',e)} value={entry.value}/>
+                                <label htmlFor={entry.value}>{entry.value}</label>
+                            </div>
+                        )}
+                    </div>
+                </div>
+                <DateRangePicker  className={classNames('calendarOverlay',{
                                     'calendarOverlayHide': isCalendarEnabled,
                                     'calendarOverlayShow': !isCalendarEnabled
                                     })}
-                firstOfWeek={1}
-                numberOfCalendars={1}
-                minimumDate={new Date()}
-                value={this.state.dateValue}
-                onSelect={this.handleDateSelect}
-                minimumDate={new Date("01-01-2010")}
-                maximumDate={moment().add(2, 'years').toDate()}
-                selectionType='range'
+                    firstOfWeek={1}
+                    numberOfCalendars={1}
+                    minimumDate={new Date()}
+                    value={this.state.dateValue}
+                    onSelect={this.handleDateSelect}
+                    minimumDate={new Date("01-01-2010")}
+                    maximumDate={moment().add(2, 'years').toDate()}
+                    selectionType='range'
                 />
+            </div>
         </Panel.Body>
         <BootstrapTable ref='table' data={filteredData} striped hover bordered={ false } search={isSearchEnabled} multiColumnSearch pagination options={ this.options }>
             <TableHeaderColumn isKey dataSort dataField='id'>ID</TableHeaderColumn>
@@ -332,8 +346,7 @@ export class GridContainer extends React.Component {
             <TableHeaderColumn dataField='parameter'>Parameter</TableHeaderColumn>
             <TableHeaderColumn dataField='location'>Location</TableHeaderColumn>
         </BootstrapTable>
-        {/* <BootstrapTable keyField='id' data={ data } columns={ columns } striped  hover  condensedbordered={ false } noDataIndication="No Data Found" defaultSorted={ defaultSorted } /> */}
-      </Panel>
+    </Panel>
     );
   }
  
