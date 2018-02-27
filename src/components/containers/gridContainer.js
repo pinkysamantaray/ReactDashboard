@@ -1,5 +1,5 @@
 import React from 'react';
-import { Panel, Form, FormGroup, FormControl, Checkbox } from 'react-bootstrap';
+import { Panel, Form, FormGroup, FormControl, Checkbox, Tabs, Tab, TabContainer, TabContent, TabPane } from 'react-bootstrap';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
@@ -24,108 +24,124 @@ export class GridContainer extends React.Component {
         isSearchEnabled: false,
         isFilterEnabled: true,
         isCalendarEnabled: true,
-        data : [{
-            id: "HIT98",
-            status: "Critical",
-            dateTime: "02/12/2018",
-            activeTime: "14 Hrs.",
-            description: "Down-time Loss",
-            parameter: "Performance",
-            location: "Location"
-        }, {
-            id: "HIT92",
-            status: "Critical",
-            dateTime: "02/01/2018",
-            activeTime: "14 Hrs.",
-            description: "Down-time Loss",
-            parameter: "Performance",
-            location: "Location"
-        }, {
-            id: "HIT86",
-            status: "Warning",
-            dateTime: "02/10/2018",
-            activeTime: "14 Hrs.",
-            description: "Down-time Loss",
-            parameter: "Performance",
-            location: "Location"
-        }, {
-            id: "HIT88",
-            status: "Non-Critical",
-            dateTime: "02/11/2018",
-            activeTime: "14 Hrs.",
-            description: "Down-time Loss",
-            parameter: "Performance",
-            location: "Location"
-        }, {
-            id: "HIT94",
-            status: "Critical",
-            dateTime: "02/21/2018",
-            activeTime: "14 Hrs.",
-            description: "Down-time Loss",
-            parameter: "Performance",
-            location: "Location"
-        }, {
-            id: "HIT91",
-            status: "Critical",
-            dateTime: "02/01/2018",
-            activeTime: "14 Hrs.",
-            description: "Down-time Loss",
-            parameter: "Performance",
-            location: "Location"
-        }, {
-            id: "HIT45",
-            status: "Critical",
-            dateTime: "02/14/2018",
-            activeTime: "14 Hrs.",
-            description: "Down-time Loss",
-            parameter: "Performance",
-            location: "Location"
-        }, {
-            id: "HIT32",
-            status: "Warning",
-            dateTime: "02/21/2018",
-            activeTime: "14 Hrs.",
-            description: "Down-time Loss",
-            parameter: "Performance",
-            location: "Location"
-        }, {
-            id: "HIT18",
-            status: "Non-Critical",
-            dateTime: "02/27/2018",
-            activeTime: "14 Hrs.",
-            description: "Down-time Loss",
-            parameter: "Performance",
-            location: "Location"
-        }, {
-            id: "HIT44",
-            status: "Critical",
-            dateTime: "02/02/2018",
-            activeTime: "14 Hrs.",
-            description: "Down-time Loss",
-            parameter: "Performance",
-            location: "Location"
-        }, {
-            id: "HIT61",
-            status: "Critical",
-            dateTime: "02/13/2018",
-            activeTime: "14 Hrs.",
-            description: "Down-time Loss",
-            parameter: "Performance",
-            location: "Location"
-        }],
+        data : { 
+            alertsTableData:[
+                {
+                id: "HIT98",
+                status: "Critical",
+                dateTime: "02/12/2018",
+                activeTime: "14 Hrs.",
+                description: "Down-time Loss",
+                parameter: "Performance",
+                location: "Location"
+                }, {
+                    id: "HIT92",
+                    status: "Critical",
+                    dateTime: "02/01/2018",
+                    activeTime: "14 Hrs.",
+                    description: "Down-time Loss",
+                    parameter: "Performance",
+                    location: "Location"
+                }, {
+                    id: "HIT86",
+                    status: "Warning",
+                    dateTime: "02/10/2018",
+                    activeTime: "14 Hrs.",
+                    description: "Down-time Loss",
+                    parameter: "Performance",
+                    location: "Location"
+                }, {
+                    id: "HIT88",
+                    status: "Non-Critical",
+                    dateTime: "02/11/2018",
+                    activeTime: "14 Hrs.",
+                    description: "Down-time Loss",
+                    parameter: "Performance",
+                    location: "Location"
+                }, {
+                    id: "HIT94",
+                    status: "Critical",
+                    dateTime: "02/21/2018",
+                    activeTime: "14 Hrs.",
+                    description: "Down-time Loss",
+                    parameter: "Performance",
+                    location: "Location"
+                }, {
+                    id: "HIT91",
+                    status: "Critical",
+                    dateTime: "02/01/2018",
+                    activeTime: "14 Hrs.",
+                    description: "Down-time Loss",
+                    parameter: "Performance",
+                    location: "Location"
+                }, {
+                    id: "HIT45",
+                    status: "Critical",
+                    dateTime: "02/14/2018",
+                    activeTime: "14 Hrs.",
+                    description: "Down-time Loss",
+                    parameter: "Performance",
+                    location: "Location"
+                }, {
+                    id: "HIT32",
+                    status: "Warning",
+                    dateTime: "02/21/2018",
+                    activeTime: "14 Hrs.",
+                    description: "Down-time Loss",
+                    parameter: "Performance",
+                    location: "Location"
+                }, {
+                    id: "HIT18",
+                    status: "Non-Critical",
+                    dateTime: "02/27/2018",
+                    activeTime: "14 Hrs.",
+                    description: "Down-time Loss",
+                    parameter: "Performance",
+                    location: "Location"
+                }, {
+                    id: "HIT44",
+                    status: "Critical",
+                    dateTime: "02/02/2018",
+                    activeTime: "14 Hrs.",
+                    description: "Down-time Loss",
+                    parameter: "Performance",
+                    location: "Location"
+                }, {
+                    id: "HIT61",
+                    status: "Critical",
+                    dateTime: "02/13/2018",
+                    activeTime: "14 Hrs.",
+                    description: "Down-time Loss",
+                    parameter: "Performance",
+                    location: "Location"
+                }
+            ],
+            downTimeTableData: [
+                {
+                id: "HIT98",
+                startDate: "01/12/2018",
+                startTime: "14:37",
+                activeTime: "14 Hrs.",
+                downTimeRC: "Air Compressor Breakdown",
+                edit: ""
+                }
+            ]
+        },
         dateValue: null,
         filterItem : []
     };
 
-    this.state.filteredData = this.state.data;
+    this.state.filteredData = this.state.data.alertsTableData;
+    this.state.downTimeTableFilteredData = this.state.data.downTimeTableData;
 
     this.showHideFilterTool = this.showHideFilterTool.bind(this);
     this.showHideCalendarTool = this.showHideCalendarTool.bind(this);
     this.handleFilterData = this.handleFilterData.bind(this);
     this.handleDateSelect = this.handleDateSelect.bind(this);
+    this.updateCellData = this.updateCellData.bind(this);
     
     let {filterData} = []; 
-    filterData = _.uniq(_.map(this.state.data, 'status'));
+    filterData = _.uniq(_.map(this.state.data.alertsTableData, 'status'));
     this.filterData =  _.map(filterData, function(value, key){
         return {
             value: value,
@@ -134,7 +150,7 @@ export class GridContainer extends React.Component {
     });
 
     let {parameterData} = []; 
-    parameterData = _.uniq(_.map(this.state.data, 'parameter'));
+    parameterData = _.uniq(_.map(this.state.data.alertsTableData, 'parameter'));
     this.parameterData =  _.map(parameterData, function(value, key){
         return {
             value: value,
@@ -222,7 +238,7 @@ export class GridContainer extends React.Component {
     let newFilteredData = [];
 
     if(this.state.filterItem.length > 0 ) {
-        newFilteredData  = this.state.data.filter( (entry) => {
+        newFilteredData  = this.state.data.alertsTableData.filter( (entry) => {
           const result = []; 
           for (let i = 0; i < this.state.filterItem.length; i+=1) {
             if(this.state.filterItem[i].value == entry[this.state.filterItem[i].type]){
@@ -232,7 +248,7 @@ export class GridContainer extends React.Component {
           return  result.length > 0 ? true :  false; 
         })
     } else {
-        newFilteredData = this.state.data;
+        newFilteredData = this.state.data.alertsTableData;
     }
 
     newFilteredData  = newFilteredData.filter((entry) => {
@@ -254,7 +270,7 @@ export class GridContainer extends React.Component {
         if(this.state.dateValue){
             gridData = this.state.filteredData;
         } else {
-            gridData = this.state.data;
+            gridData = this.state.data.alertsTableData;
         }
         newFilteredData  = gridData.filter( (entry) => {
           const result = []; 
@@ -266,7 +282,7 @@ export class GridContainer extends React.Component {
           return  result.length > 0 ? true :  false; 
         })
     } else {
-        newFilteredData = this.state.data;
+        newFilteredData = this.state.data.alertsTableData;
     }
   
     this.setState({
@@ -275,8 +291,27 @@ export class GridContainer extends React.Component {
     });
   }
 
+  updateCellData(value, row){
+    console.log("------value", value);
+    console.log("------row", row);
+    // If this function return an object, you got some ability to customize your error message
+    const response = { isValid: true, notification: { type: 'success', msg: '', title: '' } };
+    if (!value) {
+        response.isValid = false;
+        response.notification.type = 'error';
+        response.notification.msg = 'Please enter a value';
+        response.notification.title = 'Empty Field';
+    } else if (value.length < 10) {
+        response.isValid = false;
+        response.notification.type = 'error';
+        response.notification.msg = 'Value must have 10+ characters';
+        response.notification.title = 'Invalid Value';
+    }
+    return response;
+  }
+
  render() {
-    const { data, isSearchEnabled, isFilterEnabled, isCalendarEnabled, dateValue, filterItem, filteredData} = this.state; //columns, defaultSorted,
+    const { data, isSearchEnabled, isFilterEnabled, isCalendarEnabled, dateValue, filterItem, filteredData, downTimeTableFilteredData} = this.state; //columns, defaultSorted,
     return ( 
     <Panel id="gridPanel">
         <Panel.Heading>
@@ -337,15 +372,29 @@ export class GridContainer extends React.Component {
                 />
             </div>
         </Panel.Body>
-        <BootstrapTable ref='table' data={filteredData} striped hover bordered={ false } search={isSearchEnabled} multiColumnSearch pagination options={ this.options }>
-            <TableHeaderColumn isKey dataSort dataField='id'>ID</TableHeaderColumn>
-            <TableHeaderColumn dataSort dataField='status' dataFormat={ this.setStatusStyle }>Status</TableHeaderColumn>
-            <TableHeaderColumn dataField='dateTime'>Date &amp; Time</TableHeaderColumn>
-            <TableHeaderColumn dataField='activeTime'>Active Time</TableHeaderColumn>
-            <TableHeaderColumn dataField='description'>Description</TableHeaderColumn>
-            <TableHeaderColumn dataField='parameter'>Parameter</TableHeaderColumn>
-            <TableHeaderColumn dataField='location'>Location</TableHeaderColumn>
-        </BootstrapTable>
+        <Tabs defaultActiveKey={1} animation={false} id="noanim-tab-example">
+            <Tab eventKey={1} title="Alerts">
+                <BootstrapTable ref='alertsTable' containerClass="alertsTable" data={filteredData} striped hover bordered={ false } search={isSearchEnabled} multiColumnSearch pagination options={ this.options }>
+                    <TableHeaderColumn isKey dataSort dataField='id'>ID</TableHeaderColumn>
+                    <TableHeaderColumn dataSort dataField='status' dataFormat={ this.setStatusStyle }>Status</TableHeaderColumn>
+                    <TableHeaderColumn dataField='dateTime'>Date &amp; Time</TableHeaderColumn>
+                    <TableHeaderColumn dataField='activeTime'>Active Time</TableHeaderColumn>
+                    <TableHeaderColumn dataField='description'>Description</TableHeaderColumn>
+                    <TableHeaderColumn dataField='parameter'>Parameter</TableHeaderColumn>
+                    <TableHeaderColumn dataField='location'>Location</TableHeaderColumn>
+                </BootstrapTable>
+            </Tab>
+            <Tab eventKey={2} title="Down-Time">
+                <BootstrapTable ref='downTimeTable' containerClass="downTimeTable" data={downTimeTableFilteredData} cellEdit={{mode:"click", blurToSave: true}} striped hover bordered={ false } search={isSearchEnabled} multiColumnSearch pagination options={ this.options }>
+                    <TableHeaderColumn isKey dataSort dataField='id' editable={ false }>ID</TableHeaderColumn>
+                    <TableHeaderColumn dataSort dataField='startDate' editable={ false }>Start Date</TableHeaderColumn>
+                    <TableHeaderColumn dataField='startTime' editable={ false }>Start Time</TableHeaderColumn>
+                    <TableHeaderColumn dataField='activeTime' editable={ false }>Active Time</TableHeaderColumn>
+                    <TableHeaderColumn dataField='downTimeRC' editable={{validator: this.updateCellData}}>Downtime Root Cause</TableHeaderColumn>
+                    <TableHeaderColumn dataField='edit' editable={ false }></TableHeaderColumn>
+                </BootstrapTable>
+            </Tab>
+        </Tabs>
     </Panel>
     );
   }

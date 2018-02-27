@@ -29,6 +29,9 @@
 .react-bs-table table td, .react-bs-table table th {
     padding: 10px 20px !important;
 }
+.react-bs-table table td:focus {
+    outline: none;
+}
 .table>tbody>tr>td {
     font-size: 13px;
 }
@@ -36,7 +39,7 @@
     color: #0f8b8d;
     text-decoration: underline;
 }
-.react-bs-table table tr > td:nth-child(2), .react-bs-table table tr > td:nth-child(5){
+div.alertsTable div.react-bs-table table tr > td:nth-child(2), div.alertsTable div.react-bs-table table tr > td:nth-child(5){
     font-weight: 600;
 }
 .react-bs-table-container .react-bs-table-search-form > input.form-control{
@@ -131,12 +134,7 @@
     background: white;
     border: 1px solid #cc0000;
 }
-  
-/* // Box checked */
-.styled-checkbox:checked + label:before {
-    /* background: #f35429; */
-}
-    
+     
 /* // Disabled state label. */
 .styled-checkbox:disabled + label {
     color: #b8b8b8;
@@ -203,4 +201,19 @@
 .filterItemTagClose{
     margin-left: 5px;
     cursor: pointer;
+}
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+    border: 0px;
+    color: #cc0000;
+    border-bottom: 4px solid #cc0000 !important;
+    background-color: transparent;
+}
+.nav-tabs>li>a{
+    color: #868686;
+    font-weight: 600;
+    border: 0px;
+}
+.nav-tabs{
+    background: #f4f4f4;
 }
