@@ -109,7 +109,10 @@ Check out the [FAQ](/docs/FAQ.md)
 
 
 #### Deploy to heroku
+> babel-node tools/build.js && npm run open:dist
+> cd dist
 > heroku create
-> git push heroku master =>https://vast-badlands-81759.herokuapp.com/
+> git push heroku master =>https://vast-badlands-81759.herokuapp.com/ | https://git.heroku.com/vast-badlands-81759.git
 > heroku git:remote -a vast-badlands-81759
 > heroku local web
+> git remote rm heroku
