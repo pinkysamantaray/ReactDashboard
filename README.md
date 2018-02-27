@@ -102,3 +102,14 @@ Slingshot offers a rich development experience using the following technologies:
 The starter kit includes a working example app that puts all of the above to use.
 ## Questions?
 Check out the [FAQ](/docs/FAQ.md)
+
+
+
+
+
+
+#### Deploy to heroku
+> heroku create
+> git push heroku master =>https://vast-badlands-81759.herokuapp.com/
+> heroku git:remote -a vast-badlands-81759
+> heroku local web

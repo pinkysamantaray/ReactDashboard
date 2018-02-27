@@ -33,4 +33,12 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
       
+      # run tests!
+      # run: test:CI
 
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      # test
