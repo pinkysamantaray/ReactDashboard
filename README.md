@@ -105,7 +105,12 @@ Check out the [FAQ](/docs/FAQ.md)
 
 
 
-
+#### Deploy to firebase
+> npm run clean-dist
+> babel-node tools/build.js && npm run open:dist
+> firebase init
+> select hosting and set dist as public folder
+> firebase deploy => https://reactdashboard-8aedf.firebaseapp.com
 
 
 #### Deploy to heroku

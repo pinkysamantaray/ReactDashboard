@@ -19,6 +19,7 @@ export class GridContainer extends React.Component {
         onPageChange: this.onPageChange.bind(this),
         onSizePerPageList: this.sizePerPageListChange.bind(this),
         showSearchTool: this.showSearchTool.bind(this),
+        editRowData : this.editRowData.bind(this)
     };
     this.state = {
         isSearchEnabled: false,
@@ -118,12 +119,19 @@ export class GridContainer extends React.Component {
             ],
             downTimeTableData: [
                 {
-                id: "HIT98",
-                startDate: "01/12/2018",
-                startTime: "14:37",
-                activeTime: "14 Hrs.",
-                downTimeRC: "Air Compressor Breakdown",
-                edit: ""
+                    id: "HIT98",
+                    startDate: "01/12/2018",
+                    startTime: "14:37",
+                    activeTime: "14 Hrs.",
+                    downTimeRC: "Air Compressor Breakdown",
+                    edit: ""
+                }, {
+                    id: "HIT92",
+                    startDate: "02/18/2018",
+                    startTime: "18:40",
+                    activeTime: "11 Hrs.",
+                    downTimeRC: "",
+                    edit: ""
                 }
             ]
         },
@@ -184,6 +192,17 @@ export class GridContainer extends React.Component {
         styleClassName = 'text-warning';
       }
       return `<i class='fas fa-circle statusMarker ${ styleClassName }' ></i> ${cell}`; 
+  }
+
+  setEditIcon = (cell, row) => {
+    return (<i className='fas fa-pencil-alt' onClick={(e) => this.editRowData.call(this, cell, row)}></i>);
+  }
+
+  setBlankField(cell, row){
+    if(!cell) {
+        return '<input type="text" placeholder="Add description" class="addDescInput"/>';
+    } 
+    return `${cell}`;
   }
 
   showHideFilterTool(){
@@ -296,12 +315,7 @@ export class GridContainer extends React.Component {
     console.log("------row", row);
     // If this function return an object, you got some ability to customize your error message
     const response = { isValid: true, notification: { type: 'success', msg: '', title: '' } };
-    if (!value) {
-        response.isValid = false;
-        response.notification.type = 'error';
-        response.notification.msg = 'Please enter a value';
-        response.notification.title = 'Empty Field';
-    } else if (value.length < 10) {
+    if (value.length < 10) {
         response.isValid = false;
         response.notification.type = 'error';
         response.notification.msg = 'Value must have 10+ characters';
@@ -310,8 +324,15 @@ export class GridContainer extends React.Component {
     return response;
   }
 
+  editRowData(cell, row){
+    console.log("success");
+    alert("Edit Done");
+    const response = { isValid: true, notification: { type: 'success', msg: 'Done', title: 'Edit' } };
+    return response;
+  }
+
  render() {
-    const { data, isSearchEnabled, isFilterEnabled, isCalendarEnabled, dateValue, filterItem, filteredData, downTimeTableFilteredData} = this.state; //columns, defaultSorted,
+    const { data, isSearchEnabled, isFilterEnabled, isCalendarEnabled, dateValue, filterItem, filteredData, downTimeTableFilteredData} = this.state; 
     return ( 
     <Panel id="gridPanel">
         <Panel.Heading>
@@ -390,9 +411,9 @@ export class GridContainer extends React.Component {
                     <TableHeaderColumn dataSort dataField='startDate' editable={ false }>Start Date</TableHeaderColumn>
                     <TableHeaderColumn dataField='startTime' editable={ false }>Start Time</TableHeaderColumn>
                     <TableHeaderColumn dataField='activeTime' editable={ false }>Active Time</TableHeaderColumn>
-                    <TableHeaderColumn dataField='downTimeRC' editable={{validator: this.updateCellData}}>Downtime Root Cause</TableHeaderColumn>
-                    <TableHeaderColumn dataField='edit' editable={ false }></TableHeaderColumn>
-                </BootstrapTable>
+                    <TableHeaderColumn dataField='downTimeRC' width='25%' dataFormat={this.setBlankField}  editable={{validator: this.updateCellData}}>Downtime Root Cause</TableHeaderColumn>
+                    <TableHeaderColumn dataField='edit' width="7%" dataFormat={ this.setEditIcon } editable={ false }></TableHeaderColumn>
+                </BootstrapTable> {/* formatExtraData={ } } */}
             </Tab>
         </Tabs>
     </Panel>
