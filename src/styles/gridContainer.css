@@ -63,9 +63,35 @@ div.alertsTable div.react-bs-table table tr > td:nth-child(2), div.alertsTable d
     width: 60%;
     z-index: 100;
     margin-right: 20px;
-    top: 6em;
-    left: 20%;
+    top: 5.5em;
+    right: 15.5em;
 }
+.react-bs-container-body{
+    max-height: 25rem;
+    overflow-x: hidden;
+}
+
+.react-bs-container-body::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
+.react-bs-container-body::-webkit-scrollbar
+{
+	width: 6px;
+	background-color: #F5F5F5;
+}
+
+.react-bs-container-body::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #868686;
+}
+
+
 .statusMarker{
     font-size: 8px;
     margin: 0px 10px 0px -20px;

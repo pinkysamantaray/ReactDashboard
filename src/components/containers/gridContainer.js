@@ -22,6 +22,7 @@ export class GridContainer extends React.Component {
         editRowData : this.editRowData.bind(this)
     };
     this.state = {
+        activeTabKey: 1,
         isSearchEnabled: false,
         isFilterEnabled: true,
         isCalendarEnabled: true,
@@ -146,6 +147,7 @@ export class GridContainer extends React.Component {
     this.showHideCalendarTool = this.showHideCalendarTool.bind(this);
     this.handleFilterData = this.handleFilterData.bind(this);
     this.handleDateSelect = this.handleDateSelect.bind(this);
+    this.handleTabView = this.handleTabView.bind(this);
     this.updateCellData = this.updateCellData.bind(this);
     
     let {filterData} = []; 
@@ -213,17 +215,17 @@ export class GridContainer extends React.Component {
     this.setState({ isCalendarEnabled: !this.state.isCalendarEnabled });
   }
 
-  handleFilterData(checkedType, el) {
+  handleFilterData(checkedType, e) {
     let filterItems = this.state.filterItem;
     let newFilteredData = [];
 
-    let index = _.findIndex(filterItems, {value :el.target.value});
+    let index = _.findIndex(filterItems, {value :e.target.value});
 
     if(el.target.checked){
         if(index == -1){
             filterItems.push({
                 type: checkedType,
-                value:el.target.value
+                value:e.target.value
             });
             console.log('push----', filterItems);
         }
@@ -250,14 +252,24 @@ export class GridContainer extends React.Component {
     this.updateFilteredData();
   }
 
+  handleTabView(activeTab){
+    this.setState({
+        activeTabKey: activeTab
+    }, function(){
+        if(this.state.dateValue){
+            this.handleDateSelect(this.state.dateValue);
+        }
+    });
+  }
+
   handleDateSelect(range) {
     const startDate = new Date(range.start._i).getTime();
     const endDate = new Date(range.end._i).getTime();
 
     let newFilteredData = [];
-
+    let data = this.state.activeTabKey == 1 ? this.state.data.alertsTableData : this.state.data.downTimeTableData;
     if(this.state.filterItem.length > 0 ) {
-        newFilteredData  = this.state.data.alertsTableData.filter( (entry) => {
+        newFilteredData  = data.filter( (entry) => {
           const result = []; 
           for (let i = 0; i < this.state.filterItem.length; i+=1) {
             if(this.state.filterItem[i].value == entry[this.state.filterItem[i].type]){
@@ -267,18 +279,27 @@ export class GridContainer extends React.Component {
           return  result.length > 0 ? true :  false; 
         })
     } else {
-        newFilteredData = this.state.data.alertsTableData;
+        newFilteredData = data;
     }
 
     newFilteredData  = newFilteredData.filter((entry) => {
-        const entryDate = new Date(entry.dateTime).getTime();
+        const entryDate = this.state.activeTabKey == 1 ? new Date(entry.dateTime).getTime() : new Date(entry.startDate).getTime();
         return entryDate >= startDate && entryDate <= endDate;
     })
      
-    this.setState({
-        filteredData : newFilteredData,
+    this.setState({ 
         dateValue: range
     });
+
+    if(this.state.activeTabKey == 1){
+        this.setState({
+            filteredData : newFilteredData
+        });
+    } else {
+        this.setState({
+            downTimeTableFilteredData :  newFilteredData
+        });
+    }
   }
 
   updateFilteredData(){
@@ -332,7 +353,7 @@ export class GridContainer extends React.Component {
   }
 
  render() {
-    const { data, isSearchEnabled, isFilterEnabled, isCalendarEnabled, dateValue, filterItem, filteredData, downTimeTableFilteredData} = this.state; 
+    const { data, isSearchEnabled, isFilterEnabled, isCalendarEnabled, dateValue, filterItem, filteredData, downTimeTableFilteredData, activeTabKey} = this.state; 
     return ( 
     <Panel id="gridPanel">
         <Panel.Heading>
@@ -393,9 +414,10 @@ export class GridContainer extends React.Component {
                 />
             </div>
         </Panel.Body>
-        <Tabs defaultActiveKey={1} animation={false} id="noanim-tab-example">
+        <input type="hidden" value={this.state.activeTabKey} />
+        <Tabs defaultActiveKey={this.state.activeTabKey} animation={false} id="noanim" onSelect={this.handleTabView}>
             <Tab eventKey={1} title="Alerts">
-                <BootstrapTable ref='alertsTable' containerClass="alertsTable" data={filteredData} striped hover bordered={ false } search={isSearchEnabled} multiColumnSearch pagination options={ this.options }>
+                <BootstrapTable ref='alertsTable' containerClass="alertsTable" data={filteredData} striped hover bordered={ false } search={isSearchEnabled} multiColumnSearch options={ this.options }> 
                     <TableHeaderColumn isKey dataSort dataField='id'>ID</TableHeaderColumn>
                     <TableHeaderColumn dataSort dataField='status' dataFormat={ this.setStatusStyle }>Status</TableHeaderColumn>
                     <TableHeaderColumn dataField='dateTime'>Date &amp; Time</TableHeaderColumn>
@@ -406,7 +428,7 @@ export class GridContainer extends React.Component {
                 </BootstrapTable>
             </Tab>
             <Tab eventKey={2} title="Down-Time">
-                <BootstrapTable ref='downTimeTable' containerClass="downTimeTable" data={downTimeTableFilteredData} cellEdit={{mode:"click", blurToSave: true}} striped hover bordered={ false } search={isSearchEnabled} multiColumnSearch pagination options={ this.options }>
+                <BootstrapTable ref='downTimeTable' containerClass="downTimeTable" data={downTimeTableFilteredData} cellEdit={{mode:"click", blurToSave: true}} striped hover bordered={ false } search={isSearchEnabled} multiColumnSearch options={ this.options }> 
                     <TableHeaderColumn isKey dataSort dataField='id' editable={ false }>ID</TableHeaderColumn>
                     <TableHeaderColumn dataSort dataField='startDate' editable={ false }>Start Date</TableHeaderColumn>
                     <TableHeaderColumn dataField='startTime' editable={ false }>Start Time</TableHeaderColumn>
