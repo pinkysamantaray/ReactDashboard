@@ -26,6 +26,7 @@ export class GridContainer extends React.Component {
         isSearchEnabled: false,
         isFilterEnabled: true,
         isCalendarEnabled: true,
+        isDateFilterCleared: false,
         data : { 
             alertsTableData:[
                 {
@@ -149,6 +150,7 @@ export class GridContainer extends React.Component {
     this.handleDateSelect = this.handleDateSelect.bind(this);
     this.handleTabView = this.handleTabView.bind(this);
     this.updateCellData = this.updateCellData.bind(this);
+    this.clearFilter = this.clearFilter.bind(this);
     
     let {filterData} = []; 
     filterData = _.uniq(_.map(this.state.data.alertsTableData, 'status'));
@@ -221,7 +223,7 @@ export class GridContainer extends React.Component {
 
     let index = _.findIndex(filterItems, {value :e.target.value});
 
-    if(el.target.checked){
+    if(e.target.checked){
         if(index == -1){
             filterItems.push({
                 type: checkedType,
@@ -238,31 +240,71 @@ export class GridContainer extends React.Component {
     this.updateFilteredData();
     console.log('Filter Item-----', this.state.filterItem);
     if(this.state.dateValue) {
-        this.handleDateSelect(this.state.dateValue);
+        this.handleDateSelect(this.state.dateValue, false);
     }
   }
 
   removeFilterItem(item, e){
     let filterItems = this.state.filterItem;
     let index = _.findIndex(filterItems, {value :item.value});
-    let itemInFilterData = _.findIndex(this.filterData, {value: item.value});
-    this.filterData[itemInFilterData].checked = false;
+    if(item.type == 'status'){
+        let itemInFilterData = _.findIndex(this.filterData, {value: item.value});
+        this.filterData[itemInFilterData].checked = false;
+    } else {
+        let itemInFilterData = _.findIndex(this.parameterData, {value: item.value});
+        this.parameterData[itemInFilterData].checked = false;
+    }    
     document.getElementById(item.value).checked =false;
     filterItems.splice(index, 1);
     this.updateFilteredData();
+  }
+
+  removeDateFilter(e){
+    this.setState({
+        dateValue : moment.range(moment(new Date()), moment(new Date())),
+        isDateFilterCleared : true
+    }, function(){
+        this.updateFilteredData();
+    });
+  }
+
+  clearFilter(){
+    let filterData = this.filterData;
+    let parameterData = this.parameterData;
+    let filterItem = this.state.filterItem;
+    filterData.map((item, i) => {
+        let itemIndex = _.findIndex(filterItem, {value :item.value});
+        filterItem.splice(itemIndex, 1);
+        item.checked = false;
+        document.getElementById(item.value).checked =false;
+    });
+    parameterData.map((item, i) => {
+        let itemIndex = _.findIndex(filterItem, {value :item.value});
+        filterItem.splice(itemIndex, 1);
+        item.checked = false;
+        document.getElementById(item.value).checked =false;
+    });
+    this.setState({
+        filterItem : filterItem,
+        parameterData : parameterData,
+        dateValue : moment.range(moment(new Date()), moment(new Date())),
+        isDateFilterCleared : true
+    }, function(){
+        this.updateFilteredData();
+    });
   }
 
   handleTabView(activeTab){
     this.setState({
         activeTabKey: activeTab
     }, function(){
-        if(this.state.dateValue){
-            this.handleDateSelect(this.state.dateValue);
+        if(!this.state.isDateFilterCleared && this.state.dateValue){
+            this.handleDateSelect(this.state.dateValue, false);
         }
     });
   }
 
-  handleDateSelect(range) {
+  handleDateSelect(range, fromDatePicker) {
     const startDate = new Date(range.start._i).getTime();
     const endDate = new Date(range.end._i).getTime();
 
@@ -281,30 +323,35 @@ export class GridContainer extends React.Component {
     } else {
         newFilteredData = data;
     }
-
-    newFilteredData  = newFilteredData.filter((entry) => {
-        const entryDate = this.state.activeTabKey == 1 ? new Date(entry.dateTime).getTime() : new Date(entry.startDate).getTime();
-        return entryDate >= startDate && entryDate <= endDate;
-    })
      
     this.setState({ 
-        dateValue: range
-    });
+        dateValue: range,
+        isDateFilterCleared : false
+    }, function(){
+        //if(fromDatePicker == false){
+        //     newFilteredData = data;
+        // } else {
+            newFilteredData  = newFilteredData.filter((entry) => {
+                const entryDate = this.state.activeTabKey == 1 ? new Date(entry.dateTime).getTime() : new Date(entry.startDate).getTime();
+                return entryDate >= startDate && entryDate <= endDate;
+            })
+        // }
 
-    if(this.state.activeTabKey == 1){
-        this.setState({
-            filteredData : newFilteredData
-        });
-    } else {
-        this.setState({
-            downTimeTableFilteredData :  newFilteredData
-        });
-    }
+        if(this.state.activeTabKey == 1){
+            this.setState({
+                filteredData : newFilteredData
+            });
+        } else {
+            this.setState({
+                downTimeTableFilteredData :  newFilteredData
+            });
+        }
+    });        
   }
 
   updateFilteredData(){
     let filterItems = this.state.filterItem;
-    let newFilteredData = [],  gridData = [];
+    let newFilteredData = [], newDownTimeTableFilteredData = [], gridData = [];
 
     if(filterItems.length > 0 ) {
         if(this.state.dateValue){
@@ -323,11 +370,13 @@ export class GridContainer extends React.Component {
         })
     } else {
         newFilteredData = this.state.data.alertsTableData;
+        newDownTimeTableFilteredData = this.state.data.downTimeTableData;
     }
   
     this.setState({
         filterItem: filterItems,
-        filteredData : newFilteredData
+        filteredData : newFilteredData,
+        downTimeTableFilteredData : newDownTimeTableFilteredData
     });
   }
 
@@ -353,7 +402,7 @@ export class GridContainer extends React.Component {
   }
 
  render() {
-    const { data, isSearchEnabled, isFilterEnabled, isCalendarEnabled, dateValue, filterItem, filteredData, downTimeTableFilteredData, activeTabKey} = this.state; 
+    const { data, isSearchEnabled, isFilterEnabled, isCalendarEnabled, isDateFilterCleared, dateValue, filterItem, filteredData, downTimeTableFilteredData, activeTabKey} = this.state; 
     return ( 
     <Panel id="gridPanel">
         <Panel.Heading>
@@ -368,6 +417,13 @@ export class GridContainer extends React.Component {
                         <i className="fas fa-times filterItemTagClose" onClick={(e) => this.removeFilterItem(item, e)}></i> 
                     </span>
                 )}
+                {this.state.dateValue && !this.state.isDateFilterCleared && 
+                    <span className="filterItemTag">
+                        {moment(this.state.dateValue.start).format("MM/DD/YYYY")} to {moment(this.state.dateValue.end).format("MM/DD/YYYY")}
+                        <i className="fas fa-times filterItemTagClose" onClick={(e) => this.removeDateFilter(e)}></i> 
+                    </span>                    
+                }
+                {(this.state.filterItem.length >0 || (this.state.dateValue && !this.state.isDateFilterCleared) ) && <span className="clearTag" onClick={this.clearFilter}>Clear tag</span>}
             </div>
             <div>
                 <i className="fas fa-calendar pull-right tableTools" onClick={this.showHideCalendarTool}></i>       

@@ -102,7 +102,7 @@ div.alertsTable div.react-bs-table table tr > td:nth-child(2), div.alertsTable d
     position: absolute;
     top: 8em;
     right: 12%;
-    z-index: 100000;
+    z-index: 1000;
     overflow-x: hidden;
     border-radius: 5px;
     padding: 1rem;
@@ -116,7 +116,7 @@ div.alertsTable div.react-bs-table table tr > td:nth-child(2), div.alertsTable d
     position: absolute;
     top: 8em;
     right: 12%;
-    z-index: 100000;
+    z-index: 1000;
     overflow-x: hidden;
     border-radius: 5px;
     padding: 1rem;
@@ -226,6 +226,12 @@ div.alertsTable div.react-bs-table table tr > td:nth-child(2), div.alertsTable d
 }
 .filterItemTagClose{
     margin-left: 5px;
+    cursor: pointer;
+}
+.clearTag {
+    font-weight: bold;
+    text-decoration: underline;
+    margin: 0px 8px;
     cursor: pointer;
 }
 
