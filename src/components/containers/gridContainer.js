@@ -9,6 +9,7 @@ import _ from 'lodash';
 import DateRangePicker from 'react-daterange-picker';
 import moment from 'moment';
 import {} from 'moment-range';
+import $ from "jquery";
 
 export class GridContainer extends React.Component {
 
@@ -418,6 +419,7 @@ export class GridContainer extends React.Component {
                     </span>
                 )}
                 {this.state.dateValue && !this.state.isDateFilterCleared && 
+                !(moment(this.state.dateValue.start).isSameOrAfter(moment(new Date()), 'day') && moment(this.state.dateValue.end).isSameOrAfter(moment(new Date()), 'day')) && 
                     <span className="filterItemTag">
                         {moment(this.state.dateValue.start).format("MM/DD/YYYY")} to {moment(this.state.dateValue.end).format("MM/DD/YYYY")}
                         <i className="fas fa-times filterItemTagClose" onClick={(e) => this.removeDateFilter(e)}></i> 
@@ -514,6 +516,19 @@ function mapDispatchToProps(dispatch) {
     
   };
 }
+
+$(document).on('click', function (e) {
+    debugger;
+    if($(e.target).is("html")){
+        if(!$(".calendarOverlay ").hasClass("calendarOverlayHide")){
+            $(".calendarOverlay ").toggleClass("calendarOverlayHide");
+        }
+        if(!$(".filterOverlay ").hasClass("filterOverlayHide")){
+            $(".filterOverlay ").toggleClass("filterOverlayHide");
+        }
+        //$(this).off('click');
+    }
+});
 
 export default connect(
   mapStateToProps,
